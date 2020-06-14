@@ -21,7 +21,7 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 print("This is PyChat server software version " + version)
 print("listening to the TCP port " + sys.argv[2] + " for connections at " + sys.argv[1])
 
-#Check that the user provided enough parameters
+#A naive check that the user provided enough parameters
 
 if len(sys.argv) != 3:
 	print("You need to provide PyChatSrv with an ip address and a port number")
@@ -39,16 +39,15 @@ if type(sys.argv[2]) != int:
 	ETC ETC....
 """
 
-#Set the ip address to localhost and the prompt argument as the port number
+#Set the prompt arguments as the IP address and port number
 IP_address = str(sys.argv[1])
 Port = int(sys.argv[2])
 
-#binds the server to the ip address and port number
-#Is this a tuple?
+#Binds the server to the ip address and port number
 server.bind((IP_address, Port))
 
 #set the server to listen to 20 connections
-#can be increaser
+#can be increased
 server.listen(20)
 
 #initialize a list to hold the clients
@@ -106,7 +105,7 @@ while True:
 	#Maintain a list of active connections for broadcasting
 	clients.append(conn)
 	
-	#Print the address of every new connection to the server terminal
+	#Print the address of new connections to the server terminal
 	print(addr[0] + " connected")
 	
 	"Start a new thread for every client"
