@@ -6,46 +6,86 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>499</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="7" column="0">
-    <widget class="QLabel" name="username_label">
+   <item row="10" column="0" colspan="3">
+    <widget class="QLineEdit" name="username_input"/>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QLineEdit" name="server_address_input"/>
+   </item>
+   <item row="12" column="2">
+    <widget class="QPushButton" name="login_button">
      <property name="text">
-      <string>Username</string>
+      <string>Login</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLineEdit" name="server_address_input"/>
-   </item>
-   <item row="3" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="port_label">
      <property name="text">
       <string>Server port</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLineEdit" name="username_input"/>
-   </item>
-   <item row="0" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="address_label">
      <property name="text">
       <string>Server address</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="9" column="0">
+    <widget class="QLabel" name="username_label">
+     <property name="text">
+      <string>Username</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
     <widget class="QLineEdit" name="server_port_input"/>
    </item>
-   <item row="9" column="0">
-    <spacer name="vertical_spacer">
+   <item row="12" column="0">
+    <widget class="QPushButton" name="exit_button">
+     <property name="text">
+      <string>Exit</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <spacer name="button_spacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="11" column="1">
+    <spacer name="bottom_spacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <spacer name="top_spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

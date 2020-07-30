@@ -1,52 +1,67 @@
-#!/usr/bin/python
-"""
-@author: topseli
+# -*- coding: utf-8 -*-
+""" py_chat.py - Main class for a simple chat program"""
+__author__ = "topseli"
+__credits__ = ["Deepak Sritvatsav"]
+__license__ = "0BSD"
 
-original author Deepak Srivatsav https://www.geeksforgeeks.org/simple-chat-room-using-python
-"""
-
-import socket
-import select
 import sys
+import os
+import socket
+# import select
 from PyQt5 import QtWidgets, uic
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+import login_view
+import chat_view
 
 
-# Naive input check that the user provided enough command line parameters
-if len(sys.argv) != 3:
-	print("Provide PyChat with an ip address and a port number for the server")
-	print("ie python PyChat 192.168.1.2 65000")
-	exit()
+class PyChat(QtWidgets.QWidget):
 
-# Set the parameters as ip address and por
-IP_address = str(sys.argv[1])
-port = int(sys.argv[2])
+    def __init__(self):
+        super(PyChat, self).__init__()
+        self.init_ui()
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# "Try to connect to the address and port"
-try:
-	server.connect((IP_address, port))
-	print("Connected to a PyChat server at " + IP_address)
-except:
-	print("No server found at " + IP_address + " listening to the port " + str(port))
-	exit()
+    def init_ui(self):
+        path = os.path.dirname(os.path.abspath(__file__)) + '/main_window.ui'
+        uic.loadUi(path, self)
+
+        # Create QWidget instances
+        self.login_widget = login_view.LoginView()
+        self.chat_widget = chat_view.ChatView()
+
+        # Add QWidget instances to stackedWidget
+        self.stacked_widget.addWidget(self.login_widget)
+        self.stacked_widget.addWidget(self.chat_widget)
+
+        # Connect exit_buttons
+        self.login_widget.exit_button.clicked.connect(
+            self.on_exit_button_clicked)
+        self.chat_widget.exit_button.clicked.connect(
+            self.on_exit_button_clicked)
+
+        # Connect signals
+        self.login_widget.login_signal.connect(
+            self.on_login_clicked)
+        self.chat_widget.send_signal.connect(
+            self.on_send_clicked)
+
+    def on_exit_button_clicked(self):
+        sys.exit(0)
+
+    def on_login_clicked(self):
+        print("Hello")
+        self.stacked_widget.setCurrentWidget(self.chat_widget)
+
+    def on_send_clicked(self):
+        print("Hello")
 
 
+def run():
+    APP = QtWidgets.QApplication(sys.argv)
+    APP_WINDOW = PyChat()
+    APP_WINDOW.show()
+    APP.exec_()
 
-# The main loop!
-while True:
 
-	socketList = [sys.stdin, server]
-
-	read_sockets, write_socket, error_socket = select.select(socketList,[],[])
-
-	for socket in read_sockets:
-		if socket == server:
-			message = socket.recv(2048)
-			print(message)
-		else:
-			message = sys.stdin.readline()
-			server.send(message)
-			sys.stdout.write("<You>" + message + "\n")
-			sys.stdout.flush()
-server.close
+if __name__ == '__main__':
+    run()
