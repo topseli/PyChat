@@ -13,7 +13,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
 class LoginView(QtWidgets.QWidget):
 
-    login_signal = pyqtSignal()
+    login_signal = pyqtSignal(dict)
 
     def __init__(self):
         super(LoginView, self).__init__()
@@ -25,7 +25,12 @@ class LoginView(QtWidgets.QWidget):
 
     @pyqtSlot()
     def on_login_button_clicked(self):
-        self.login_signal.emit()
+        login_info = {
+            "address": self.address_input.text(),
+            "port": int(self.port_input.text()),
+            "username": self.username_input.text()
+        }
+        self.login_signal.emit(login_info)
 
 
 def run():

@@ -48,8 +48,17 @@ class PyChat(QtWidgets.QWidget):
     def on_exit_button_clicked(self):
         sys.exit(0)
 
-    def on_login_clicked(self):
-        print("Hello")
+    def on_login_clicked(self, login_info):
+        print(login_info)
+        try:
+            self.server.connect((login_info["address"], login_info["port"]))
+        except ConnectionRefusedError as e:
+            print("Connection Refused Error: " + str(e))
+            # TODO : Open a QMessageBox displaying the error
+            return
+
+        self.chat_widget.chat_display.insertPlainText(
+            "Connected to " + login_info["address"] + "\n")
         self.stacked_widget.setCurrentWidget(self.chat_widget)
 
     def on_send_clicked(self):
