@@ -12,7 +12,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
 class ChatView(QtWidgets.QWidget):
 
-    send_signal = pyqtSignal()
+    send_signal = pyqtSignal(str)
 
     def __init__(self):
         super(ChatView, self).__init__()
@@ -24,7 +24,9 @@ class ChatView(QtWidgets.QWidget):
 
     @pyqtSlot()
     def on_send_button_clicked(self):
-        self.send_signal.emit()
+        message = self.chat_input.text()
+        self.chat_input.clear()
+        self.send_signal.emit(message)
 
 
 def run():
