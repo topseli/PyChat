@@ -7,9 +7,9 @@ __license__ = "0BSD"
 import sys
 import os
 import socket
-# import select
+import threading
+import logging
 from PyQt5 import QtWidgets, uic
-
 import login_view
 import chat_view
 
@@ -20,6 +20,8 @@ class PyChat(QtWidgets.QWidget):
         super(PyChat, self).__init__()
         self.init_ui()
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.thread = threading.Thread(target=self.server_listener, args=(1,), daemon=True)
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
     def init_ui(self):
         path = os.path.dirname(os.path.abspath(__file__)) + '/main_window.ui'
@@ -45,22 +47,30 @@ class PyChat(QtWidgets.QWidget):
         self.chat_widget.send_signal.connect(
             self.on_send_clicked)
 
+    def server_listener(self, id):
+        while True:
+            message = self.server.recv(2048).decode("utf-8")
+            if message:
+                self.chat_widget.chat_display.append(message)
+
+    def start_chat_thread(self):
+        self.thread.start()
+
     def on_exit_button_clicked(self):
         sys.exit(0)
 
     def on_login_clicked(self, login_info):
-        print(login_info)
+
         try:
             self.server.connect((login_info["address"], login_info["port"]))
             self.server.sendall(login_info["username"].encode("utf-8"))
-            welcome_msg = self.server.recv(2048)
+
         except ConnectionRefusedError as e:
-            print("Connection Refused Error: " + str(e))
-            # TODO : Open a QMessageBox displaying the error
+            self.login_widget.show_warning(e)
             return
 
-        self.chat_widget.chat_display.insertPlainText(welcome_msg.decode("utf-8"))
         self.stacked_widget.setCurrentWidget(self.chat_widget)
+        self.start_chat_thread()
 
     def on_send_clicked(self, message):
         self.server.sendall(message.encode("utf-8"))

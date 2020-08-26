@@ -9,6 +9,7 @@ import sys
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QMessageBox
 
 
 class LoginView(QtWidgets.QWidget):
@@ -22,6 +23,15 @@ class LoginView(QtWidgets.QWidget):
     def init_ui(self):
         path = os.path.dirname(os.path.abspath(__file__)) + '/login_view.ui'
         uic.loadUi(path, self)
+
+    def show_warning(self, e):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText("The server is not responding")
+        msg.setWindowTitle("Connection error")
+        msg.setDetailedText(str(e))
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
 
     @pyqtSlot()
     def on_login_button_clicked(self):
