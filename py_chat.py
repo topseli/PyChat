@@ -8,6 +8,7 @@ import sys
 import os
 import socket
 import threading
+import base64
 import logging
 from PyQt5 import QtWidgets, uic
 import login_view
@@ -47,9 +48,14 @@ class PyChat(QtWidgets.QWidget):
         self.chat_widget.send_signal.connect(
             self.on_send_clicked)
 
+    def to_base64(self, message):
+        return base64.encodebytes(message.encode("utf-8"))
+    def rcv_base64(self, message):
+        return base64.decodebytes(message).decode("utf-8")
+
     def server_listener(self, id):
         while True:
-            message = self.server.recv(2048).decode("utf-8")
+            message = self.rcv_base64(self.server.recv(2048))
             if message:
                 self.chat_widget.chat_display.append(message)
 
@@ -63,7 +69,7 @@ class PyChat(QtWidgets.QWidget):
 
         try:
             self.server.connect((login_info["address"], login_info["port"]))
-            self.server.sendall(login_info["username"].encode("utf-8"))
+            self.server.sendall(self.to_base64(login_info["username"]))
 
         except ConnectionRefusedError as e:
             self.login_widget.show_warning(e)
@@ -73,7 +79,7 @@ class PyChat(QtWidgets.QWidget):
         self.start_chat_thread()
 
     def on_send_clicked(self, message):
-        self.server.sendall(message.encode("utf-8"))
+        self.server.sendall(self.to_base64(message))
 
 
 def run():

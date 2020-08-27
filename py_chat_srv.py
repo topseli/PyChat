@@ -10,6 +10,7 @@ https://www.geeksforgeeks.org/simple-chat-room-using-python
 import socket
 import sys
 import threading
+import base64
 import logging
 
 version = "0.1"
@@ -33,16 +34,24 @@ server.bind((IP_address, Port))
 server.listen(20)
 client_sockets = []
 
+def to_base64(message):
+        return base64.encodebytes(message.encode("utf-8"))
+
+def rcv_base64(message):
+        return base64.decodebytes(message).decode("utf-8")
 
 def client_thread(id, conn):
-
+    username = rcv_base64(conn.recv(2048))
+    logging.info("<%s> connected.", username)
     conn.send(
-        ("Welcome to PyChat. The server is running PyChat version "
-         + version).encode("utf-8"))
+        to_base64("Welcome to PyChat. The server is running PyChat version "
+         + version + "\n"))
+
+    broadcast("<" + username + "> connected.", conn)
 
     while True:
         try:
-            message = conn.recv(2048).decode("utf-8")
+            message = rcv_base64(conn.recv(2048))
             if message:
                 user_and_message = ("<" + username + "> " + message)
                 logging.info(user_and_message)
@@ -58,10 +67,10 @@ def client_thread(id, conn):
 def broadcast(message, conn):
     for client in client_sockets:
         try:
-            client.send(message.encode("utf-8"))
+            client.send(to_base64(message))
         except Exception:
             client.close()
-            client.remove(conn)
+            remove(conn)
 
 
 def remove(conn):
@@ -72,9 +81,6 @@ def remove(conn):
 while True:
     conn, addr = server.accept()
     client_sockets.append(conn)
-    username = conn.recv(2048).decode("utf-8")
-    logging.info("<%s> connected!", username)
-    broadcast
     threading.Thread(target=client_thread, args=(1, conn)).start()
 
 conn.close()
