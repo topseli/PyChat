@@ -34,11 +34,14 @@ server.bind((IP_address, Port))
 server.listen(20)
 client_sockets = []
 
+
 def to_base64(message):
-        return base64.encodebytes(message.encode("utf-8"))
+    return base64.encodebytes(message.encode("utf-8"))
+
 
 def rcv_base64(message):
-        return base64.decodebytes(message).decode("utf-8")
+    return base64.decodebytes(message).decode("utf-8")
+
 
 def client_thread(id, conn):
     username = rcv_base64(conn.recv(2048))
