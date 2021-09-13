@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
-    <height>346</height>
+    <width>460</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,7 +65,7 @@
    <item row="6" column="0" colspan="3">
     <widget class="QLineEdit" name="port_input">
      <property name="text">
-      <string>42069</string>
+      <string>21012</string>
      </property>
      <property name="placeholderText">
       <string/>

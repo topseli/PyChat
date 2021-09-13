@@ -25,10 +25,10 @@ if len(sys.argv) != 2:
     exit()
 
 IP_address = str(sys.argv[1])
-Port = 42069
+Port = 21012
 
 logging.info("This is PyChat server software version " + version)
-logging.info("Server is running at %s:%s", IP_address, str(Port))
+logging.info("The Server is running at %s:%s", IP_address, str(Port))
 
 server.bind((IP_address, Port))
 server.listen(20)
@@ -47,8 +47,7 @@ def client_thread(id, conn):
     username = rcv_base64(conn.recv(2048))
     logging.info("<%s> connected.", username)
     conn.send(
-        to_base64("Welcome to PyChat. The server is running PyChat version "
-         + version + "\n"))
+        to_base64("Welcome to PyChat. The server is running PyChat version " + version + "\n"))
 
     broadcast("<" + username + "> connected.", conn)
 
